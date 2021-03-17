@@ -1,6 +1,5 @@
-const { comment } = require("../db/models");
-const { baseResponse } = require("../utils/helper/baseResponse");
-// const { Op } = require("sequelize");
+const { baseResponse } = require("../utils/helpers/baseResponse");
+const { comment } = require("./../db/models");
 
 class CommentController {
   static async create(req, res, next) {

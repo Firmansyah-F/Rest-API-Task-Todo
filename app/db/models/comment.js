@@ -12,9 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       comment.belongsTo(models.user)
       comment.belongsTo(models.task)
-      // define association here
-      comment.belongsTo(models.user)
-      comment.belongsTo(models.task)
     }
   };
   comment.init({
