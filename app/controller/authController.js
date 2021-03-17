@@ -18,10 +18,10 @@ class AuthController {
         if (check) {
           const payload = {
             id: data.id,
-            fullname:data.fullname,
+            fullname: data.fullname,
             username: data.username,
             email: data.email,
-            photo:data.photo,
+            photo: data.photo,
             role: data.role,
           };
           payload.token = generateJWT(payload);
@@ -45,6 +45,38 @@ class AuthController {
       res.status(500);
       next(error);
     }
+  }
+
+  static async register(req, res, next) {
+    try {
+      const dataEmail = await user.findOne({
+        where: {
+          email: req.body.email,
+        },
+      });
+      if (dataEmail) {
+        return baseResponse({
+          success: false,
+          message: "Email must be unique",
+        })(res, 200);
+      }
+
+      const { salt, hash } = hashing(req.body.password);
+
+      const data = await user.create({
+        fullname: req.body.fullname,
+        username: req.body.username,
+        email: req.body.email,
+        password: hash,
+        salt: salt,
+        photo: req.body.photo,
+        role: req.body.role,
+      });
+      return baseResponse({ message: "success create new user", data: data })(
+        res,
+        201
+      );
+    } catch (error) {}
   }
 }
 module.exports = AuthController;
