@@ -14,15 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   user.init({
-    fullname: DataTypes.STRING,
     username: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     salt: DataTypes.STRING,
+    role: DataTypes.ENUM("admin","user","supervisor"),
     deletedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'user',
+    paranoid:true
   });
   return user;
 };

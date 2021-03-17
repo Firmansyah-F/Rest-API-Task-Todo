@@ -19,12 +19,13 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     description: DataTypes.STRING,
     dueDate: DataTypes.DATE,
-    status: DataTypes.ENUM,
+    status: DataTypes.ENUM("todo","need to review","work in progress","complete"),
     attachment: DataTypes.STRING,
     deletedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'task',
+    paranoid:true
   });
   return task;
 };

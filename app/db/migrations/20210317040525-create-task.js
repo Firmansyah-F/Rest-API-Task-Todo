@@ -9,22 +9,30 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull:false,
+        references:{
+          model:'user',
+          key:'id'
+        },
+        onDelete: 'CASCADE'
       },
       assignee: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull:false
       },
       title: {
         type: Sequelize.STRING
       },
       description: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       dueDate: {
         type: Sequelize.DATE
       },
       status: {
-        type: Sequelize.ENUM
+        type: Sequelize.ENUM("todo","need to review","work in progress","complete"),
+        defaultValue: "todo"
       },
       attachment: {
         type: Sequelize.STRING

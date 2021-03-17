@@ -8,20 +8,23 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      fullname: {
-        type: Sequelize.STRING
-      },
       username: {
         type: Sequelize.STRING
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull:false,
+        unique:true
       },
       password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull:false
       },
       salt: {
         type: Sequelize.STRING
+      },
+      role: {
+        type: Sequelize.ENUM("admin","user","supervisor")
       },
       deletedAt: {
         type: Sequelize.DATE
