@@ -1,6 +1,6 @@
 const baseResponse = ({ success = true, message, data = [] }) => (
     res,
-    statusCode
+    statusCode = 200
   ) => {
     const payload = {
       success: success,
@@ -8,8 +8,7 @@ const baseResponse = ({ success = true, message, data = [] }) => (
       data: data,
     };
     res.status(statusCode).json(payload);
-    res.end();
+    res.end;
   };
   
   module.exports = { baseResponse };
-  
