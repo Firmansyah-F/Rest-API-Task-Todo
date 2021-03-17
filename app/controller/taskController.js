@@ -26,9 +26,30 @@ class TaskController {
 
   static async getAllTask(req, res, next) {
     //   if req.user == role? baru di arahkan sesuai dengan role
+    // jika rolenya user dia hanya bisa get punya dirinya sendiri
+    // Jika dia admin dan supervisor dia bisa liat smeuanya
     try {
       const data = await task.findAll();
       return baseResponse({ message: "Get All data", data: data })(res, 200);
+    } catch (error) {
+      res.status(500);
+      next(error);
+    }
+  }
+
+  static async getAllById(req, res, next) {
+    //   if req.user == role? baru di arahkan sesuai dengan role
+    // jika rolenya user dia hanya bisa get punya dirinya sendiri
+    // Jika dia admin dan supervisor dia bisa liat smeuanya
+    // Kenapa tidak pake findByPk karena untuk melindungi data admin
+    // dan supervisor
+    // findOne Where role:admin,supervisor,user
+    try {
+      const data = await task.findOne(req.params.id);
+      if (data) {
+          return baseResponse({message:"success get data",data:data})(res, 200)
+      }
+    //   return baseResponse({success:false,})
     } catch (error) {
       res.status(500);
       next(error);
