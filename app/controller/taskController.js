@@ -87,7 +87,7 @@ class TaskController {
           );
         }
       } else {
-        const data = await task.findByPk(req.params.id)
+        const data = await task.findByPk(req.params.id);
         if (data) {
           return baseResponse({ message: "success get data", data: data })(
             res,
@@ -104,31 +104,71 @@ class TaskController {
 
   static async updateTask(req, res, next) {
     try {
-      const newData = {
-        userId: req.body.userId,
-        assignee: req.body.assignee,
-        title: req.body.title,
-        description: req.body.description,
-        dueDate: req.body.dueDate,
-        status: "todo",
-        attachment: req.body.attachment,
-      };
-      const data = await task.update(newData, {
-        where: {
-          id: req.params.id,
-        },
-      });
-      if (data[0]) {
-        const databaru = await task.findByPk(req.params.id);
-        return baseResponse({ message: "data updated", data: databaru })(
+      const role = req.user.role;
+      if (role === "user") {
+        // const data = await task.findAll({ where: { assignee: req.user.id } });
+        const dataUpdate = await task.findAll({
+          where: { assignee: req.user.id },
+        });
+        const dataFilter = dataUpdate.filter((e) => {
+          return e.dataValues === req.params.id;
+        });
+        if (dataFilter.length === 0) {
+          return baseResponse({
+            success: false,
+            message: "Data with your role is not available",
+          })(res, 200);
+        } else {
+          const newData = {
+            title: req.body.title,
+            description: req.body.description,
+            dueDate: req.body.dueDate,
+            status: req.body.status,
+            attachment: req.body.attachment,
+          };
+          const data = await task.update(newData, {
+            where: {
+              assignee: req.user.id,
+            },
+          });
+          if (data[0]) {
+            const databaru = await task.findByPk(req.params.id);
+            return baseResponse({ message: "data updated", data: databaru })(
+              res,
+              200
+            );
+          }
+          return baseResponse({
+            success: false,
+            message: "data doesn't exist",
+          })(res, 200);
+        }
+      } else {
+        const newData = {
+          assignee: req.body.assignee,
+          title: req.body.title,
+          description: req.body.description,
+          dueDate: req.body.dueDate,
+          status: req.body.status,
+          attachment: req.body.attachment,
+        };
+        const data = await task.update(newData, {
+          where: {
+            id: req.body.id,
+          },
+        });
+        if (data[0]) {
+          const databaru = await task.findByPk(req.params.id);
+          return baseResponse({ message: "data updated", data: databaru })(
+            res,
+            200
+          );
+        }
+        return baseResponse({ success: false, message: "data doesn't exist" })(
           res,
           200
         );
       }
-      return baseResponse({ success: false, message: "data doesn't exist" })(
-        res,
-        200
-      );
     } catch (error) {
       res.status(500);
       next(error);
@@ -155,30 +195,93 @@ class TaskController {
     }
   }
 
-  static async getRole(req, res, next) {
+  // fetch
+  static async updateTaskStatus(req, res, next){
     try {
-      const role = req.user.role;
-      if (role === "user") {
-        const data = {
-          userId: req.user.id,
-          assignee: req.user.id,
-          title: req.body.title,
-          description: req.body.description,
-          dueDate: req.body.dueDate,
-          status: "todo",
-          attachment: req.body.attachment,
-        };
-        return baseResponse({ message: "asdasdsad", data: data })(res, 200);
+      const role = req.user.role
+      if (role == "user") {
+        const dataUpdate = await task.findAll({
+          where: { assignee: req.user.id },
+        });
+        const dataFilter = dataUpdate.filter((e) => {
+          return e.dataValues === req.params.id;
+        });
+        if (dataFilter.length === 0) {
+          return baseResponse({
+            success: false,
+            message: "Data with your role is not available",
+          })(res, 200);
+        } else {
+          const newData = {
+            status: req.body.status,
+          };
+          const data = await task.update(newData, {
+            where: {
+              assignee: req.user.id,
+            },
+          });
+          if (data[0]) {
+            const databaru = await task.findByPk(req.params.id);
+            return baseResponse({ message: "data updated", data: databaru })(
+              res,
+              200
+            );
+          }
+          return baseResponse({
+            success: false,
+            message: "data doesn't exist",
+          })(res, 200);
+        }
       }
-      // if (role==="admin") {
-      //   return baseResponse({ message: "success ini admin", data: role })(res, 200)
-      // }
-      // return baseResponse({ message: "success ini bukan", data: role })(res, 200)
     } catch (error) {
       res.status(500);
-      next(error);
+      next(error)
     }
   }
+
+  // static async getRole(req, res, next) {
+  //   try {
+  //     const role = req.user.role;
+  //     if (role === "user") {
+  //       const data = {
+  //         userId: req.user.id,
+  //         assignee: req.user.id,
+  //         title: req.body.title,
+  //         description: req.body.description,
+  //         dueDate: req.body.dueDate,
+  //         status: "todo",
+  //         attachment: req.body.attachment,
+  //       };
+  //       return baseResponse({ message: "asdasdsad", data: data })(res, 200);
+  //     }
+  //     // if (role==="admin") {
+  //     //   return baseResponse({ message: "success ini admin", data: role })(res, 200)
+  //     // }
+  //     // return baseResponse({ message: "success ini bukan", data: role })(res, 200)
+  //   } catch (error) {
+  //     res.status(500);
+  //     next(error);
+  //   }
+  // }
+
+  // static async getIdTaskByRoleAssigne(req, res, next) {
+  //   const role = req.user.role;
+  //   if (role == "user") {
+  //     const data = await task.findAll({ where: { assignee: req.user.id } });
+  //     const dataMap = data.filter((e) => {
+  //       return e.dataValues.id === 2;
+  //     });
+
+  //     // return baseResponse({ message: "successssss", data:dataMap });
+  //     console.log(dataMap.length);
+  //     if (dataMap.length === 0) {
+  //       console.log("Data kosong");
+  //     } else {
+  //       console.log("Data TIDAKKK kosong");
+  //     }
+  //     return baseResponse({ message: "success", data: dataMap })(res, 200);
+  //   }
+  // }
 }
 
 module.exports = TaskController;
