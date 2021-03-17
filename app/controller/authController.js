@@ -1,7 +1,7 @@
 const { baseResponse } = require("../utils/helpers/baseResponse");
 const { user } = require("./../db/models");
 const bcrypt = require("bcrypt");
-const { generateJWT } = require("../utils/middleware/authJwt");
+const { generateJwt } = require("../utils/middleware/authJwt");
 
 class AuthController {
   static async login(req, res, next) {
@@ -14,7 +14,7 @@ class AuthController {
       //   console.log(data)
       if (data) {
         const check = bcrypt.compareSync(req.body.password, data.password);
-        console.log(check);
+        // console.log(check);
         if (check) {
           const payload = {
             id: data.id,
@@ -24,7 +24,7 @@ class AuthController {
             photo: data.photo,
             role: data.role,
           };
-          payload.token = generateJWT(payload);
+          payload.token = generateJwt(payload);
           return baseResponse({
             message: "logged in",
             data: { ...payload },

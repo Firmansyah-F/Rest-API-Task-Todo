@@ -43,4 +43,4 @@ const permit = (...roles) => {
   };
 };
 
-module.exports = { generateJwt, verifyJw, permit };
+module.exports = { generateJwt, verifyJwt, permit };
