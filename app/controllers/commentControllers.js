@@ -1,5 +1,5 @@
 const { comment } = require("../db/models");
-const { baseResponse } = require("../utils/helpers/baseResponse");
+const { baseResponse } = require("../utils/helper/baseResponse");
 // const { Op } = require("sequelize");
 
 class CommentController {
