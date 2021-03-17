@@ -1,2 +1,2 @@
-const { baseResponse } = require("../utils/helper/baseResponse");
+const { baseResponse } = require("../utils/helpers/baseResponse");
 const { user } = require("./../db/models");
