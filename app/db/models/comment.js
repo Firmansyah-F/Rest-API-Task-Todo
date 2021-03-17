@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       comment.belongsTo(models.user)
       comment.belongsTo(models.task)
       // define association here
+      comment.belongsTo(models.user)
+      comment.belongsTo(models.task)
     }
   };
   comment.init({
