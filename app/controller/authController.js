@@ -71,7 +71,9 @@ class AuthController {
         salt: salt,
         photo: req.body.photo,
       });
-      return baseResponse({ message: "user registered", data: data })(res, 201);
+      return baseResponse({ 
+        message: "user registered", 
+        data: data })(res, 201);
     } catch (error) {
       res.status(500);
       next(error);
