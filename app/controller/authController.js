@@ -57,26 +57,25 @@ class AuthController {
       if (dataEmail) {
         return baseResponse({
           success: false,
-          message: "Email must be unique",
+          message: "Please use different email address",
         })(res, 200);
       }
 
       const { salt, hash } = hashing(req.body.password);
 
       const data = await user.create({
-        fullname: req.body.fullname,
         username: req.body.username,
+        role: req.body.role,
         email: req.body.email,
         password: hash,
         salt: salt,
         photo: req.body.photo,
-        role: req.body.role,
       });
-      return baseResponse({ message: "success create new user", data: data })(
-        res,
-        201
-      );
-    } catch (error) {}
+      return baseResponse({ message: "user registered", data: data })(res, 201);
+    } catch (error) {
+      res.status(500);
+      next(error);
+    }
   }
 }
 module.exports = AuthController;
