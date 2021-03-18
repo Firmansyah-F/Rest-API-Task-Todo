@@ -25,7 +25,10 @@ class UserController {
         password: hash,
         salt: salt,
       });
-      return baseResponse({ message: "success created user", data: data })(
+      return baseResponse({ message: "success created user", data: {
+        username : data.username,
+        email: data.email
+      } })(
         res,
         201
       );
