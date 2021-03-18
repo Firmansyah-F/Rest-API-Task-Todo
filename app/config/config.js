@@ -1,4 +1,8 @@
 require("dotenv").config();
+var pg = require('pg');
+pg.defaults.ssl = true;
+
+// rejectUnauthorized: false
 
 module.exports = {
   development: {
@@ -9,6 +13,7 @@ module.exports = {
     dialect: process.env.DB_DIALECT,
   },
 };
+
 
 // {
 //   "development": {
