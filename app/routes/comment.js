@@ -9,10 +9,14 @@ router
     [verifyJwt, permit("admin", "user", "supervisor")],
     CommentController.create
   )
-
-  .put([verifyJwt, permit("admin", "user", "supervisor")],CommentController.update)
-  .delete([verifyJwt, permit("admin", "supervisor","user")], CommentController.delete);
-
+  .put(
+    [verifyJwt, permit("admin", "user", "supervisor")],
+    CommentController.update
+  )
+  .delete(
+    [verifyJwt, permit("admin", "supervisor", "user")],
+    CommentController.delete
+  );
 
 router
   .route("/comment")

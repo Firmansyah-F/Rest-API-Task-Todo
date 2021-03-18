@@ -123,7 +123,7 @@ class TaskController {
           assignee: req.body.assignee,
           title: req.body.title,
           description: req.body.description,
-          dueDate: req.body.dueDate,
+          dueDate: req.body.dueDate,  
         };
         const data = await task.update(newData, {
           where: {

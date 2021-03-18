@@ -81,7 +81,7 @@ class CommentController {
   static async getAll(req, res, next) {
     try {
       const role = req.user.role;
-      if (role == "user" || role == "supervisor") {
+      if (role === "user" || role === "supervisor") {
         const getCommentUser = await comment.findAll({
           where: {
             userId: req.user.id,
@@ -108,7 +108,7 @@ class CommentController {
   static async delete(req, res, next) {
     try {
       const role = req.user.role;
-      if (role == "user" || role == "supervisor") {
+      if (role === "user" || role === "supervisor") {
         const deleteComment = await comment.destroy({
           where: {
             id: req.params.id,
@@ -123,14 +123,18 @@ class CommentController {
             message: "comment doesn't exist",
           });
         }
-      } else {
+      } else if (role === "admin") {
         const deleteComment = await comment.destroy({
           where: {
-            where: { id: req.params.id },
+            id: req.params.id,
           },
         });
+        // console.log(deleteComment)
         if (deleteComment) {
-          return baseResponse({ message: "success delete" })(res, 202);
+          return baseResponse({
+            message: "success delete",
+            data: deleteComment,
+          })(res, 202);
         } else {
           return res.status(404).json({
             succes: false,
@@ -141,101 +145,92 @@ class CommentController {
       }
     } catch (error) {
       res.status(500);
-      next(error.message);
+      next(error);
     }
   }
 
   static async update(req, res, next) {
     try {
-      const role = req.user.role;
-      if (role == "user") {
-        const userUpdate = await task.findOne({
+      // const role = req.user.role
+      // if (role === "user" || role === "supervisor") {
+
+      // }
+      const newData = {
+        comment: req.body.comment,
+      };
+
+      const data = await comment.update(newData, {
+        where: {
+          id: req.params.id,
+          userId: req.user.id,
+        },
+      });
+      if (data[0]) {
+        const dataBaru = await comment.findOne({
           where: { id: req.params.id, userId: req.user.id },
         });
-        if (userUpdate) {
-          const newComment = {
-            taskId: userUpdate.dataValues.id,
-            userId: userUpdate.dataValues.assignee,
-            comment: req.body.comment,
-          };
-          const commentUpdate = await comment.update(newComment, {
-            where: {
-              id: req.params.id,
-            },
-          });
-          if (commentUpdate[0]) {
-            const getComment = await comment.findByPk(req.params.id);
-            return baseResponse({
-              success: true,
-              message: "success update comment",
-              data: getComment,
-            })(res);
-          }
-        } else {
-          return res.status(404).json({
-            succes: false,
-            message: "comment not found",
-            data: [],
-          });
-        }
-      } else if ((role = "supervisor")) {
-        const svrUpdate = await task.findOne({
-          where: { id: req.params.id, userId: req.user.id },
-        });
-        if (svrUpdate) {
-          const newComment = {
-            taskId: svrUpdate.dataValues.id,
-            userId: svrUpdate.dataValues.userId,
-            comment: req.body.comment,
-          };
-          const commentUpdate = await comment.update(newComment, {
-            where: {
-              id: req.params.id,
-            },
-          });
-          if (commentUpdate[0]) {
-            const getComment = await comment.findByPk(req.params.id);
-            return baseResponse({
-              success: true,
-              message: "success update comment",
-              data: getComment,
-            })(res);
-          }
-        } else {
-          return res.status(404).json({
-            succes: false,
-            message: "comment not found",
-            data: [],
-          });
-        }
-      } else {
-        const newComment = {
-          taskId: req.body.id,
-          userId: req.body.userId,
-          comment: req.body.comment,
-        };
-        const commentUpdate = await comment.update(newComment, {
-          where: {
-            id: req.params.id,
-          },
-        });
-        if (commentUpdate[0]) {
-          const getComment = await comment.findByPk(req.params.id);
-          return baseResponse({
-            success: true,
-            message: "success update comment",
-            data: getComment,
-          })(res);
-        }
-        return res.status(404).json({
-          succes: false,
-          message: "comment not found",
-          data: [],
-        });
+        return baseResponse({ message: "success", data: dataBaru })(res, 200);
       }
+      return baseResponse({ success: false, message: "data doesn't exist" })(
+        res,
+        202
+      );
+      // console.log(data);
     } catch (error) {
+      res.status(500);
       next(error);
     }
   }
+
+  // static async update(req, res, next) {
+  //   try {
+  //     const role = req.user.role;
+  //     if (role === "user") {
+  //       const commentUpdate = await comment.findOne({
+  //         where: {
+  //           id: req.params.id,
+  //           userId: req.user.id,
+  //         },
+  //       });
+  //       if (commentUpdate) {
+  //         const newComment = {
+  //           comment: req.body.comment,
+  //         };
+  //         const data = await comment.update(newComment, {
+  //           where: {
+  //             id: req.params.id,
+  //             userId: req.user.id,
+  //           },
+  //         });
+  //         if (data[0]) {
+  //           const dataBaru = await comment.findOne({
+  //             where: {
+  //               id: req.params.id,
+  //               userId: req.user.id,
+  //             },
+  //           });
+  //           return baseResponse({ message: "success updated", data: dataBaru })(
+  //             res,
+  //             200
+  //           );
+  //         }
+  //       } else {
+  //         return baseResponse({
+  //           success: false,
+  //           message: "data doens't exist ",
+  //         })(res, 200);
+  //       }
+  //     } else if (role === "supervisor") {
+  //       const commentUpdate = await comment.findOne({
+  //         where: {
+  //           id: req.params.id,
+  //           userId: req.user.id,
+  //         },
+  //       });
+  //     }
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 }
 module.exports = CommentController;
