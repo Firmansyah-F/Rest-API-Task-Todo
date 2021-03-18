@@ -13,6 +13,10 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 
+app.route('/',(req, res)=>{
+   res.json({message:"Hello World"});
+})
+
 router.use("/api/v1", routerIndex);
 app.use(router);
 app.use(notFound);
