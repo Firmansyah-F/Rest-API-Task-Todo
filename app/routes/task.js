@@ -3,11 +3,11 @@ const router = express.Router();
 const TaskController = require("./../controller/taskController");
 const { verifyJwt, permit } = require("./../utils/middleware/authJwt");
 // const { updateStatus } = require("./../utils/helpers/validationSchema");
-const { validateStatus } = require("./../utils/middleware/validate");
+const { validateStatus,validateCreateTask } = require("./../utils/middleware/validate");
 
 router
   .route("/")
-  .post([verifyJwt, permit("admin", "supervisor")], TaskController.createTask)
+  .post([verifyJwt, permit("admin", "supervisor"),validateCreateTask], TaskController.createTask)
   .get(
     [verifyJwt, permit("admin", "user", "supervisor")],
     TaskController.getAllTask
