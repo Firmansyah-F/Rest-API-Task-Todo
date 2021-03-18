@@ -20,12 +20,20 @@ const validateStatus = async (req, res, next) => {
       console.log(`validate `,req.body.status)
       if (role === "user") {
         let schema = yup.string().matches(/(todo|complete|work in progres)/).required()
-        await schema.isValid(req.body.status)
-        next()
+        if (await schema.isValid(req.body.status)) {
+          next()
+        } else {
+          res.status(400);
+           res.json({message:"you can only enter the complete, todo, work in progress"});
+        }        
       } else {
         let schema = yup.string().matches(/(need to review)/).required()
-        await schema.isValid(req.body.status)
-        next()
+        if (await schema.isValid(req.body.status)) {
+          next()
+        } else {
+          res.status(400);
+          res.json({message:"you can only enter the 'need to review'"});
+        }
       }
     } catch (error) {
       res.status(500);
