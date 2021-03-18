@@ -10,7 +10,7 @@ mailtrap.js
 nodemailer.js
 
 .env.original
-
+.env.heroku
 
 package-lock.json
 package.json
