@@ -2,6 +2,7 @@ const { baseResponse } = require("../utils/helpers/baseResponse");
 const { user } = require("./../db/models");
 const { hashing } = require("./../utils/helpers/hashPassword");
 
+
 class UserController {
   static async createUser(req, res, next) {
     try {

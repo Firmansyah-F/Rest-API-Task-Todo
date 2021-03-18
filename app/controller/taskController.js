@@ -1,10 +1,11 @@
 const { baseResponse } = require("../utils/helpers/baseResponse");
-const { task } = require("./../db/models");
+const { task, user } = require("./../db/models");
+const main = require("./../utils/helpers/sendEmail");
 
 class TaskController {
   static async createTask(req, res, next) {
     try {
-      const role = req.user.role
+      const role = req.user.role;
       if (role === "supervisor") {
         const data = {
           userId: req.user.id,
@@ -15,10 +16,17 @@ class TaskController {
           status: "todo",
         };
         const createData = await task.create(data);
-        return baseResponse({
-          message: "success create task",
-          data: createData,
-        })(res, 201);
+        if (createData) {
+          const sendEmail = await user.findOne({
+            where: { id: req.body.assignee },
+          });
+          // console.log(sendEmail.dataValues.email);
+          main(sendEmail.dataValues.email)
+          return baseResponse({
+            message: "success create task",
+            data: createData,
+          })(res, 201);
+        }
       } else {
         const data = {
           userId: req.body.userId,
@@ -123,7 +131,7 @@ class TaskController {
           assignee: req.body.assignee,
           title: req.body.title,
           description: req.body.description,
-          dueDate: req.body.dueDate,  
+          dueDate: req.body.dueDate,
         };
         const data = await task.update(newData, {
           where: {
@@ -133,6 +141,7 @@ class TaskController {
         });
         if (data[0]) {
           const databaru = await task.findByPk(req.params.id);
+
           return baseResponse({ message: "data updated", data: databaru })(
             res,
             200
@@ -235,11 +244,17 @@ class TaskController {
               assignee: req.user.id,
             },
           });
-          return baseResponse({message:"success updated status", data:dataBaru})(res, 200)
+          return baseResponse({
+            message: "success updated status",
+            data: dataBaru,
+          })(res, 200);
         } else {
-          return baseResponse({success:false,message:"Data doesn't exist"})(res, 200)
+          return baseResponse({
+            success: false,
+            message: "Data doesn't exist",
+          })(res, 200);
         }
-      } else if(role === "supervisor"){
+      } else if (role === "supervisor") {
         const newData = {
           status: req.body.status,
         };
@@ -256,9 +271,15 @@ class TaskController {
               userId: req.user.id,
             },
           });
-          return baseResponse({message:"success updated status", data:dataBaru})(res, 200)
+          return baseResponse({
+            message: "success updated status",
+            data: dataBaru,
+          })(res, 200);
         } else {
-          return baseResponse({success:false,message:"Data doesn't exist"})(res, 200)
+          return baseResponse({
+            success: false,
+            message: "Data doesn't exist",
+          })(res, 200);
         }
       } else {
         const newData = {
@@ -266,19 +287,24 @@ class TaskController {
         };
         const data = await task.update(newData, {
           where: {
-            id: req.params.id
+            id: req.params.id,
           },
         });
         if (data[0]) {
           const dataBaru = await task.findOne({
             where: {
-              id: req.params.id
+              id: req.params.id,
             },
           });
-          return baseResponse({message:"success updated status", data:dataBaru})(res, 200)
-        }
-        else {
-          return baseResponse({success:false,message:"Data doesn't exist"})(res, 200)
+          return baseResponse({
+            message: "success updated status",
+            data: dataBaru,
+          })(res, 200);
+        } else {
+          return baseResponse({
+            success: false,
+            message: "Data doesn't exist",
+          })(res, 200);
         }
       }
     } catch (error) {
@@ -286,7 +312,6 @@ class TaskController {
       next(error);
     }
   }
-
 }
 
 module.exports = TaskController;
