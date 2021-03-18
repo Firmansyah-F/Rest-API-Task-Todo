@@ -9,6 +9,8 @@
 mailtrap.js
 nodemailer.js
 
+.env.original
+
 
 package-lock.json
 package.json
