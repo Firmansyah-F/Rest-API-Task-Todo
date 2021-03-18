@@ -23,6 +23,9 @@ const loginSchema = yup.object().shape({
   password: yup.string().required(),
 });
 
+const updateStatus = yup.object().shape({
+  status: yup.string().required()
+})
 // typeSchema
 // const typeSchema = yup.object({
 //   name: yup.string().required()
@@ -39,5 +42,6 @@ const loginSchema = yup.object().shape({
 
 module.exports = {
   userSchema,
-  loginSchema
+  loginSchema,
+  updateStatus
 };

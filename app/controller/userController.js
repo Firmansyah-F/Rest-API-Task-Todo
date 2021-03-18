@@ -25,10 +25,14 @@ class UserController {
         password: hash,
         salt: salt,
       });
-      return baseResponse({ message: "success created user", data: data })(
-        res,
-        201
-      );
+      return baseResponse({
+        message: "success created user",
+        data: {
+          username: data.dataValues.username,
+          email: data.dataValues.email,
+          role: data.dataValues.role,
+        },
+      })(res, 201);
     } catch (error) {
       res.status(500);
       next(error);
@@ -37,7 +41,9 @@ class UserController {
 
   static async getAllUser(req, res, next) {
     try {
-      const data = await user.findAll();
+      const data = await user.findAll({
+        attributes: ["id", "username", "email", "role"],
+      });
       return baseResponse({ message: "success get all data", data: data })(
         res,
         200
@@ -48,52 +54,52 @@ class UserController {
     }
   }
 
-  static async updateUser(req, res, next) {
-    try {
-      const { salt, hash } = hasing(req.body.password);
-      const newData = {
-        username: req.body.username,
-        email: req.body.email,
-        role: req.body.role,
-        password: hash,
-        salt: salt,
-      };
-      const dataUpdate = await user.update(newData, {
-        where: { id: req.params.id },
-      });
+  // static async updateUser(req, res, next) {
+  //   try {
+  //     const { salt, hash } = hasing(req.body.password);
+  //     const newData = {
+  //       username: req.body.username,
+  //       email: req.body.email,
+  //       role: req.body.role,
+  //       password: hash,
+  //       salt: salt,
+  //     };
+  //     const dataUpdate = await user.update(newData, {
+  //       where: { id: req.params.id },
+  //     });
 
-      if (dataUpdate[0]) {
-        const dataUpdated = await user.findByPk(req.params.id);
-        return baseResponse({
-          message: "success updated data",
-          data: dataUpdated,
-        })(res, 200);
-      }
-      return baseResponse({
-        success: false,
-        message: "data doesn't exist",
-        data: dataUpdated,
-      })(res, 200);
-    } catch (error) {
-      res.status(500);
-      next(error);
-    }
-  }
+  //     if (dataUpdate[0]) {
+  //       const dataUpdated = await user.findByPk(req.params.id);
+  //       return baseResponse({
+  //         message: "success updated data",
+  //         data: dataUpdated,
+  //       })(res, 200);
+  //     }
+  //     return baseResponse({
+  //       success: false,
+  //       message: "data doesn't exist",
+  //       data: dataUpdated,
+  //     })(res, 200);
+  //   } catch (error) {
+  //     res.status(500);
+  //     next(error);
+  //   }
+  // }
 
-  static async deleteUser(req, res, next) {
-    try {
-      const data = await user.destroy({ where: { id: req.params.id } });
-      if (data) {
-        return baseResponse({ message: "data deleted", data: data })(res, 200);
-      }
-      return baseResponse({ success: false, message: "data doesn't exist" })(
-        res,
-        200
-      );
-    } catch (error) {
-      res.status(500);
-      next(error);
-    }
-  }
+  // static async deleteUser(req, res, next) {
+  //   try {
+  //     const data = await user.destroy({ where: { id: req.params.id } });
+  //     if (data) {
+  //       return baseResponse({ message: "data deleted", data: data })(res, 200);
+  //     }
+  //     return baseResponse({ success: false, message: "data doesn't exist" })(
+  //       res,
+  //       200
+  //     );
+  //   } catch (error) {
+  //     res.status(500);
+  //     next(error);
+  //   }
+  // }
 }
 module.exports = UserController;
