@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const UserController = require("./../controller/userController");
-const { verifyJwt, permit } = require("./../utils/middleware/authJwt");
+const { verifyJwt , permit } = require("./../utils/middleware/authJwt");
 
 router
   .route("/")
-  .post(verifyJwt, permit("admin","user","supervisor"), UserController.createUser)
-  .get(verifyJwt, permit("admin"), UserController.getAllUser);
+  .post(UserController.createUser)
+  .get(verifyJwt, permit("admin","supervisor"), UserController.getAllUser);
 
 module.exports = { router };
