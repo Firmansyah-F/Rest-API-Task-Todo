@@ -7,13 +7,13 @@ let main = async (paramsEmail) => {
   // Only needed if you don't have a real mail account for testing
   let testAccount = await nodemailer.createTestAccount();
 
-var transporter = nodemailer.createTransport({
+  let transporter = nodemailer.createTransport({
     host: "smtp.mailtrap.io",
     port: 2525,
     auth: {
-      user: "28ed0ff7ed8fcd",
-      pass: "b5dbf04f2fa865"
-    }
+      user: "211c0324ba9115",
+      pass: "1956c79ffb0ed1"
+    },
   });
 
   // send mail with defined transport object
