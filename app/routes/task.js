@@ -13,7 +13,6 @@ router
     TaskController.getAllTask
   );
 
-// router.route("/role").get(verifyJwt, TaskController.getIdTaskByRoleAssigne);
 router
   .route("/:id")
   .delete([verifyJwt, permit("admin", "supervisor")], TaskController.deleteTask)

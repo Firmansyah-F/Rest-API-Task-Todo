@@ -4,11 +4,17 @@ const { comment, user, task } = require("./../db/models");
 class CommentController {
   static async create(req, res, next) {
     try {
-      if (user.role == "user") {
+      const role = req.user.role
+      if (role == "user") {
         
         const dataTask = await task.findOne({
           where : { id : req.params.id, assignee: req.user.id }
         })
+        // if (dataTask[0]) {
+        //   return baseResponse({message:"ada"})(res, 200)
+        // } else {
+        //   return baseResponse({message:"ga ada"})(res, 200)
+        // }
         const dataUser = {
           taskId: dataTask.dataValues.id,
           userId: dataTask.dataValues.assignee}
@@ -24,7 +30,7 @@ class CommentController {
           data: createCommentUser,
         })(res, 201);
 
-      } else if (user.role == "supervisor") {
+      } else if (role == "supervisor") {
 
         const dataTask = await task.findOne({
           where : { id : req.params.id, userId: req.user.id }
@@ -64,16 +70,16 @@ class CommentController {
 
   static async getAll(req, res, next) {
     try {
-
-      if (user.role == "user"|| user.role == "supervisor") {
+      const role = req.user.role
+      if (role == "user" || role == "supervisor") {
         const getCommentUser = await comment.findAll({
           where : {
-            where : { id : req.params.id, userId: req.user.id }
+            userId: req.user.id
           }
         });
         return baseResponse({
           success: true,
-          message: "create new comment",
+          message: "get all comment",
           data: getCommentUser,
         })(res, 201);
 
@@ -97,7 +103,7 @@ class CommentController {
       if (user.role == "user"|| user.role == "supervisor") {
         const deleteComment = await comment.destroy({
           where : {
-            where : { id : req.params.id, userId: req.user.id }
+              id : req.params.id, userId: req.user.id 
           }
         });
         if (deleteComment) {
