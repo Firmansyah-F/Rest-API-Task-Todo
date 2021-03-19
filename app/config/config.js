@@ -1,4 +1,8 @@
 require("dotenv").config();
+var pg = require('pg');
+pg.defaults.ssl = true;
+
+// rejectUnauthorized: false
 
 module.exports = {
   development: {
@@ -10,6 +14,7 @@ module.exports = {
     port: process.env.DB_PORT
   },
 };
+
 
 // {
 //   "development": {
