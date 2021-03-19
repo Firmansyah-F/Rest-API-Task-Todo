@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const router = express.Router();
-const port = 3000 || process.env.PORT
+const port = 3000 || process.env.PORT 
 const cors = require("cors");
 const morgan = require("morgan");
 const { errorHandler } = require("./app/utils/middleware/errorHandling");
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 
-app.route('/',(req, res)=>{
+app.get('/',(req, res)=>{
    res.json({message:"Hello World"});
 })
 
@@ -24,5 +24,5 @@ app.use(errorHandler);
 
 
 app.listen(port, () => {
-  console.log(`Server started on port http://localhost:${port}`);
+  console.log(`Server started on port ${port}`);
 });

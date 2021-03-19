@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -20,14 +20,22 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "nodemailer": "^6.5.0",
+    "nodemon": "^2.0.7",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
+    "psql": "0.0.1",
     "sequelize": "^6.5.1",
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "eslint": "^7.22.0",
-    "nodemailer": "^6.5.0",
-    "nodemon": "^2.0.7"
-  }
+    "eslint": "^7.22.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/homepage408/Rest-API-Task-Todo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/homepage408/Rest-API-Task-Todo/issues"
+  },
+  "homepage": "https://github.com/homepage408/Rest-API-Task-Todo#readme"
 }
