@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const router = express.Router();
-const port = 5000 || process.env.PORT 
+const port = 5000 || process.env.PORT
 const cors = require("cors");
 const morgan = require("morgan");
 const { errorHandler } = require("./app/utils/middleware/errorHandling");
@@ -23,6 +23,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 
-app.listen(port, () => {
+app.listen(process.env.PORT||PORT, () => {
   console.log(`Server started on port ${port}`);
 });
