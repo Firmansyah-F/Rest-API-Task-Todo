@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const router = express.Router();
-const port = 3000 || process.env.PORT 
+const port = 5000 || process.env.PORT 
 const cors = require("cors");
 const morgan = require("morgan");
 const { errorHandler } = require("./app/utils/middleware/errorHandling");
